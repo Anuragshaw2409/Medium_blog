@@ -1,11 +1,14 @@
 {
-  "name": "common",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "@anuragshaw2409/medium-blog",
+  "version": "1.0.3",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
 }
