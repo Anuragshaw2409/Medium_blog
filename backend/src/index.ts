@@ -1,31 +1,24 @@
 import { Hono } from 'hono'
+import {userRouter} from './Routes/userRouter'
+import {blogRouter} from './Routes/blogRouter'
 
-const app = new Hono()
+
+// specify all the types of env variables
+
+const app = new Hono<{
+    Bindings: {
+      DATABASE_URL: string,
+      jwt_secret: string
+    }
+}>()
+
+app.route('/api/v1/user', userRouter);
+app.route('/api/v1/blog', blogRouter);
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
 
-app.post('/api/v1/signup', (c) => {
-  return c.text('signup!')
-})
-
-
-app.post('/api/v1/signin', (c) => {
-  return c.text('signin!')
-})
-
-app.post('/api/v1/blog', (c) => {
-  return c.text('blog post!')
-})
-
-app.put('/api/v1/blog', (c) => {
-  return c.text('blogedit!')
-})
-
-app.get('/api/v1/blog/:id', (c) => {
-  return c.text('get blogs!')
-})
 
 export default app
