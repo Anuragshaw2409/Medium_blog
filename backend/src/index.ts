@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import {userRouter} from './Routes/userRouter'
 import {blogRouter} from './Routes/blogRouter'
-
+import { cors } from 'hono/cors'
 
 // specify all the types of env variables
 
@@ -12,6 +12,7 @@ const app = new Hono<{
     }
 }>()
 
+app.use('/*',cors());
 app.route('/api/v1/user', userRouter);
 app.route('/api/v1/blog', blogRouter);
 

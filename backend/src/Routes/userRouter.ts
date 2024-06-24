@@ -61,8 +61,9 @@ userRouter.post('/signup', async(c) => {
     const prisma = new PrismaClient({
       datasourceUrl: c.env?.DATABASE_URL}).$extends(withAccelerate());
     
-    const body = await c.req.json();
-    const {success} = signInSchema.safeParse(body);
+    const {email,password} = await c.req.json();
+
+    const {success} = signInSchema.safeParse({email, password});
       if(!success)
         return c.json({succes: false, message: "Wrong Input"});
     try {
@@ -70,7 +71,7 @@ userRouter.post('/signup', async(c) => {
       
       const user = await prisma.user.findUnique({
         where:{
-          email: body.email
+          email: email
         }
       });
       
@@ -79,9 +80,13 @@ userRouter.post('/signup', async(c) => {
           c.status(404);
           return c.json({success:false, message:"User does not exist"});}
     
-      if(user.password == body.password){
+      if(user.password == password){
         const token = await sign({id:user.id}, c.env.jwt_secret);
         return c.json({success: true, token});
+      }
+      else{
+        c.status(401);
+        return c.json({success: false, message:"Invalid Credentials"});
       }
       
     } catch (error) {

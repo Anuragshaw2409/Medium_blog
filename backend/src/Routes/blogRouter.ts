@@ -53,7 +53,8 @@ blogRouter.post('/', async(c) => {
              data:{
                  title: body.title,
                  content: body.content,
-                 authorid: userId
+                 authorid: userId,
+                 publishedDate: new Date().getTime().toString()
              }
          });
      
@@ -110,10 +111,23 @@ blogRouter.put('/:id', async(c) => {
   
       try {
           const blogs = await prisma.post.findMany({
-              select:{
-              title:true}
+            where:{
+                published: false
+            },
+            select:{
+              title:true,
+              content: true,
+              publishedDate: true,
+              author:{
+                select:{
+                    name:true,
+                    authorImage: true
+                }
+              }
+
+            }
           });
-          return c.json({blogs});
+          return c.json(blogs);
           
       } catch (error) {
           return c.json({message: "Error fetching blogs", error})
